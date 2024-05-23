@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "Nombre de identificación del proyecto",
+  "private_key_id": "Su private key id",
+  "private_key": "Su private key",
+  "client_email": "Su client email",
+  "client_id": "Su client id",
+  "auth_uri": "Su auth uri",
+  "token_uri": "Su token uri",
+  "auth_provider_x509_cert_url": "Su auth provider cert url",
+  "client_x509_cert_url": "Su client cert url",
+  "universe_domain": "googleapis.com"
+}
