@@ -38,4 +38,28 @@ public class ProductoController : ControllerBase
 
         return Ok(resultado);
     }
+
+    [HttpGet("nombre/{nombre}")]
+    public async Task<ActionResult> GetProductoByNombre(string nombre)
+    {
+        var resultado = await _productoService.GetProductoByNombre(nombre);
+
+        return Ok(resultado);
+    }
+
+    [HttpPut]
+    public async Task<ActionResult> UpdateProducto([FromBody] Producto request)
+    {
+        await _productoService.UpdateProducto(request);
+
+        return Ok();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteProductoById(int id)
+    {
+        await _productoService.DeleteProducto(id);
+
+        return Ok();
+    }
 }

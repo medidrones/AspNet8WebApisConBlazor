@@ -15,45 +15,56 @@ public class ProductoService : IProductoService
 
     public async Task CreateProducto(Producto producto)
     {
-        var resultado = await _context.Database.ExecuteSqlAsync(@$"
-            INSERT INTO ""Productos""
-            (
-                Nombre,
-                Descripcion,
-                Precio
-            )
-            VALUES(
-                {producto.Nombre},
-                {producto.Descripcion},
-                {producto.Precio}
-            )
-        ");
-
-        if (resultado <= 0)
+        try
         {
-            throw new Exception("Errores en la insercion del producto");
+            await _context.Database.ExecuteSqlAsync(@$"
+                CALL sp_insert_producto({producto.Precio}, {producto.Nombre}, {producto.Descripcion});
+            ");
         }
+        catch (Exception ex) 
+        {
+            throw new Exception("Error en la insercion del producto", ex);
+        }
+              
     }
 
-    public Task DeleteProducto(int id)
+    public async Task DeleteProducto(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            await _context.Database.ExecuteSqlAsync($@"
+                CALL sp_delete_producto({id})
+            ");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Error eliminado producto", ex);
+        }
     }
 
     public async Task<IEnumerable<Producto>> GetAllProductos()
     {
         return await _context.Database.SqlQuery<Producto>(@$"
-            SELECT * FROM ""Productos""
+            SELECT * FROM fx_query_producto_all()
         ").ToListAsync();
     }
 
     public async Task<Producto> GetProductoById(int id)
     {
         var resultado = await _context.Database.SqlQuery<Producto>(@$"
-            SELECT * FROM ""Productos"" WHERE Id = {id}
-        ").FirstOrDefaultAsync();
+            SELECT * FROM fx_query_producto_by_id({id})
+        ").ToListAsync();
 
-        return resultado is null ? null! : resultado!;
+        var producto = resultado.First();
+
+        return producto;
+    }
+
+    public async Task<List<Producto>> GetProductoByNombre(string nombre)
+    {
+       return await _context.Database.SqlQuery<Producto>(@$"
+            SELECT * FROM fx_query_producto_by_nombre({nombre})
+        ").ToListAsync();      
     }
 
     public Task<bool> SaveChanges()
@@ -61,8 +72,16 @@ public class ProductoService : IProductoService
         throw new NotImplementedException();
     }
 
-    public Task UpdateProducto(Producto producto)
+    public async Task UpdateProducto(Producto producto)
     {
-        throw new NotImplementedException();
+        try
+        {
+            await _context.Database.ExecuteSqlAsync(@$"
+                CALL sp_update_producto({producto.Id}, {producto.Precio}, {producto.Nombre}, {producto.Descripcion});");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("No se pudo actualizar el producto", ex);
+        }
     }
 }
