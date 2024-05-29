@@ -54,6 +54,11 @@ builder.Services
 
 builder.Services.AddScoped<IProductoService, ProductoService>();
 
+builder.Services.AddCors(options => options.AddPolicy("CorsPolicy", builder => builder
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader()));
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -63,6 +68,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("CorsPolicy");
 app.MapControllers();
 
 app.UseAuthentication();
