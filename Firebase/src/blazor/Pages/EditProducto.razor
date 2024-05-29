@@ -1,0 +1,81 @@
+﻿@page "/producto"
+@page "/producto/{id:int}"
+@using blazor.Models
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+@if (Id is null)
+{
+    <PageTitle>Crear nuevo producto</PageTitle>
+    <h3>Crear Nuevo Producto</h3>
+}
+else
+{
+    <PageTitle>Editar @producto.Nombre</PageTitle>
+    <h3>Editar @producto.Nombre</h3>
+}
+
+<EditForm Model="producto" OnSubmit="HandleSubmit">
+    <div>
+        <label for="nombre">Nombre</label>
+        <InputText id="nombre" @bind-Value="producto.Nombre" class="form-control" />
+    </div>
+    <div>
+        <label for="descripcion">Descripcion</label>
+        <InputText id="descripcion" @bind-Value="producto.Descripcion" class="form-control" />
+    </div>
+    <div>
+        <label for="precio">Precio</label>
+        <InputNumber id="precio" @bind-Value="producto.Precio" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+
+    @if (Id is not null)
+    {
+        <button type="button" class="btn btn-danger" @onclick="EliminarProducto">Eliminar</button>
+    }
+</EditForm>
+
+@code {
+
+    [Parameter]
+    public int? Id { get; set; }
+
+    Producto producto = new Producto { Nombre = "Macbook" };
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id is not null)
+        {
+            var resultado = await Http.GetFromJsonAsync<Producto>($"/api/producto/{Id}");
+
+            if (resultado is not null)
+            {
+                producto = resultado;
+            }
+        }
+    }
+
+    async Task HandleSubmit()
+    {        
+        if (Id is null)
+        {
+            await Http.PostAsJsonAsync("/api/producto", producto);
+        }
+        else
+        {
+            producto.Id = Id ?? 0;
+            await Http.PutAsJsonAsync($"/api/producto", producto);
+        }
+
+        NavigationManager.NavigateTo("/productos");
+    }
+
+    async Task EliminarProducto()
+    {
+        await Http.DeleteAsync($"/api/producto/{Id}");
+
+        NavigationManager.NavigateTo("/productos");
+    }
+}

@@ -1,8 +1,11 @@
 ﻿@page "/productos"
 @using blazor.Models
 @inject HttpClient Http
+@inject NavigationManager NavigationManager
 
-<h3>Productos de Medicode</h3>
+<h3>Productos de Postgres onCloud</h3>
+
+<button @onclick="AgregarProducto" class="btn btn-primary">Agregar Producto</button>
 
 @if(productos!.Count <= 0)
 {
@@ -17,6 +20,7 @@ else
                 <th>Nombre</th>                
                 <th>Descripcion</th>                
                 <th>Precio</th>                
+                <th></th>                
             </tr>
         </thead>
 
@@ -28,6 +32,9 @@ else
                     <td>@product.Nombre</td>
                     <td>@product.Descripcion</td>
                     <td>@product.Precio</td>
+                    <td>
+                        <button @onclick="() => EditarProducto(product.Id)" class="btn btn-primary">Editar</button>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -41,5 +48,15 @@ else
     protected override async Task OnInitializedAsync()
     {
         productos = await Http.GetFromJsonAsync<List<Producto>>("/api/producto");
+    }
+
+    void AgregarProducto()
+    {
+        NavigationManager.NavigateTo("/producto");
+    }
+
+    void EditarProducto(int id)
+    {
+        NavigationManager.NavigateTo($"/producto/{id}");
     }
 }
