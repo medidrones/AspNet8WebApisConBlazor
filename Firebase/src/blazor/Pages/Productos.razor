@@ -1,6 +1,45 @@
 ﻿@page "/productos"
+@using blazor.Models
+@inject HttpClient Http
+
 <h3>Productos de Medicode</h3>
+
+@if(productos!.Count <= 0)
+{
+    <p><em>Cargando Productos... </em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>                
+                <th>Nombre</th>                
+                <th>Descripcion</th>                
+                <th>Precio</th>                
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var product in productos)
+            {
+                <tr>
+                    <td>@product.Id</td>
+                    <td>@product.Nombre</td>
+                    <td>@product.Descripcion</td>
+                    <td>@product.Precio</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @code {
 
+    List<Producto>? productos = new List<Producto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        productos = await Http.GetFromJsonAsync<List<Producto>>("/api/producto");
+    }
 }
