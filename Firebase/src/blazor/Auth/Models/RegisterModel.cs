@@ -1,6 +1,6 @@
-﻿namespace NetFirebase.Api.Dtos.UsuarioRegister;
+﻿namespace blazor.Auth.Models;
 
-public class UsuarioRegisterRequestDto
+public class RegisterModel
 {
     public string? FullNombre { get; set; }
     public string? Email { get; set; }

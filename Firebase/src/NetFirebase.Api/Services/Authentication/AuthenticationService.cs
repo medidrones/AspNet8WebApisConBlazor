@@ -18,6 +18,12 @@ public class AuthenticationService : IAuthenticationService
     {
         var credentials = new { request.Email, request.Password, returnSecureToken = true };
         var response = await _httpClient.PostAsJsonAsync("", credentials);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception("Credenciales erroneas");
+        }
+
         var authFirebaseObject = await response.Content.ReadFromJsonAsync<AuthFirebase>();
 
         return authFirebaseObject!.IdToken!;
@@ -25,7 +31,11 @@ public class AuthenticationService : IAuthenticationService
 
     public async Task<string> RegisterAsync(UsuarioRegisterRequestDto request)
     {
-        var userArgs = new UserRecordArgs { Email = request.Email, Password = request.Password };
+        var userArgs = new UserRecordArgs { 
+            DisplayName = request.FullNombre, 
+            Email = request.Email, 
+            Password = request.Password };
+
         var usuario = await FirebaseAuth.DefaultInstance.CreateUserAsync(userArgs);
         
         return usuario.Uid;

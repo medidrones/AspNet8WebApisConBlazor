@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NetFirebase.Api.Models.Domain;
 using NetFirebase.Api.Services.Productos;
 
@@ -15,6 +16,7 @@ public class ProductoController : ControllerBase
         _productoService = productoService;
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult> CreateProducto([FromBody] Producto request)
     {
@@ -23,6 +25,7 @@ public class ProductoController : ControllerBase
         return Ok();
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult> GetAllProductos()
     {
@@ -31,6 +34,7 @@ public class ProductoController : ControllerBase
         return Ok(resultados);
     }
 
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<ActionResult> GetProductoById(int id)
     {
@@ -39,6 +43,7 @@ public class ProductoController : ControllerBase
         return Ok(resultado);
     }
 
+    [Authorize]
     [HttpGet("nombre/{nombre}")]
     public async Task<ActionResult> GetProductoByNombre(string nombre)
     {
@@ -47,6 +52,7 @@ public class ProductoController : ControllerBase
         return Ok(resultado);
     }
 
+    [Authorize]
     [HttpPut]
     public async Task<ActionResult> UpdateProducto([FromBody] Producto request)
     {
@@ -55,6 +61,7 @@ public class ProductoController : ControllerBase
         return Ok();
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteProductoById(int id)
     {
