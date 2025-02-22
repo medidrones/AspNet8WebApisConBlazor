@@ -5,7 +5,7 @@ VisualStudioVersion = 17.9.34902.65
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFirebase.Api", "src\NetFirebase.Api\NetFirebase.Api.csproj", "{BE9D36F7-5F77-4E73-8AA1-5A2B328F3D84}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "blazor", "src\blazor\blazor.csproj", "{15357159-B38B-4A6E-8AEE-7A60974BEF70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "blazor", "src\blazor\blazor.csproj", "{15357159-B38B-4A6E-8AEE-7A60974BEF70}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,5 +1,4 @@
-﻿@page "/productos"
-@using blazor.Models
+@page "/productos"
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 
@@ -7,25 +6,23 @@
 
 <button @onclick="AgregarProducto" class="btn btn-primary">Agregar Producto</button>
 
-@if(productos!.Count <= 0)
+@if(productos!.Count <=0)
 {
-    <p><em>Cargando Productos... </em></p>
+    <p><em>Cargando Productos ... </em></p>
 }
-else
-{
+else {
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>                
-                <th>Nombre</th>                
-                <th>Descripcion</th>                
-                <th>Precio</th>                
-                <th></th>                
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Descripcion</th>
+                <th>Precio</th>
+                <th></th>
             </tr>
         </thead>
-
         <tbody>
-            @foreach (var product in productos)
+            @foreach(var product in productos)
             {
                 <tr>
                     <td>@product.Id</td>
@@ -42,12 +39,11 @@ else
 }
 
 @code {
-
-    List<Producto>? productos = new List<Producto>();
+    List<Models.Producto>? productos = new List<Models.Producto>();
 
     protected override async Task OnInitializedAsync()
     {
-        productos = await Http.GetFromJsonAsync<List<Producto>>("/api/producto");
+         productos = await Http.GetFromJsonAsync<List<Models.Producto>>("/api/producto");
     }
 
     void AgregarProducto()

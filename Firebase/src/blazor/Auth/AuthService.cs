@@ -14,9 +14,10 @@ public class AuthService : IAuthService
     private readonly ILocalStorageService _localStorage;
 
     public AuthService(
-        HttpClient httpClient, 
-        AuthenticationStateProvider authenticationStateProvider, 
-        ILocalStorageService localStorage)
+        HttpClient httpClient,
+        AuthenticationStateProvider authenticationStateProvider,
+        ILocalStorageService localStorage
+    )
     {
         _httpClient = httpClient;
         _authenticationStateProvider = authenticationStateProvider;
@@ -25,6 +26,7 @@ public class AuthService : IAuthService
 
     public async Task<string> Login(LoginModel loginModel)
     {
+
         var loginAsJson = JsonSerializer.Serialize(loginModel);
         var response = await _httpClient.PostAsync("api/Usuario/login", new StringContent(loginAsJson, Encoding.UTF8, "application/json"));
 
@@ -36,7 +38,8 @@ public class AuthService : IAuthService
         var loginResult = await response.Content.ReadAsStringAsync();
 
         await _localStorage.SetItemAsStringAsync("authToken", loginResult);
-        ((ApiAuthenticationStateProvider) _authenticationStateProvider).MarkUserAsAuthenticated(loginModel.Email!);
+
+        ((ApiAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(loginModel.Email!);
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", loginResult);
 
         return loginResult;
@@ -45,16 +48,19 @@ public class AuthService : IAuthService
     public async Task Logout()
     {
         await _localStorage.RemoveItemAsync("authToken");
-        ((ApiAuthenticationStateProvider) _authenticationStateProvider).MarkUserAsLoggedOut();
+
+        ((ApiAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsLoggedOut();
+
         _httpClient.DefaultRequestHeaders.Authorization = null;
     }
 
     public async Task<string> Register(RegisterModel registerModel)
     {
         var registerAsJson = JsonSerializer.Serialize(registerModel);
+
         var response = await _httpClient.PostAsync("api/Usuario/register", new StringContent(registerAsJson, Encoding.UTF8, "application/json"));
 
-        if (!response.IsSuccessStatusCode) 
+        if (!response.IsSuccessStatusCode)
         {
             return null!;
         }
