@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using NetFirebase.Api.Authentication;
 using NetFirebase.Api.Models.Domain;
 using NetFirebase.Api.Models.Enums;
+using NetFirebase.Api.Pagination;
 using NetFirebase.Api.Services.Productos;
+using NetFirebase.Api.Vms;
 
 namespace NetFirebase.Api.Controllers;
 
@@ -70,5 +72,13 @@ public class ProductoController : ControllerBase
         await _productoService.DeleteProducto(id);
 
         return Ok();
+    }
+
+    [AllowAnonymous]
+    [HttpGet("pagination")]
+    public async Task<ActionResult<PagedResults<ProductoVm>>> GetPagination([FromQuery] PaginationParams request)
+    {
+        var resultados = await _productoService.GetPagination(request);
+        return Ok(resultados);
     }
 }

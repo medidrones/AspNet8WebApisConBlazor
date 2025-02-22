@@ -7,6 +7,7 @@ using NetFirebase.Api;
 using NetFirebase.Api.Authentication;
 using NetFirebase.Api.Data;
 using NetFirebase.Api.Extensions;
+using NetFirebase.Api.Pagination;
 using NetFirebase.Api.Services.Authentication;
 using NetFirebase.Api.Services.Permisos;
 using NetFirebase.Api.Services.Productos;
@@ -65,6 +66,7 @@ builder.Services.AddScoped<IPermisoService, PermisoService>();
 });*/
 
 builder.Services.AddScoped<IProductoService, ProductoService>();
+builder.Services.AddScoped<IPagedList, PagedList>();
 
 builder.Services.AddCors(options => options.AddPolicy("CorsPolicy", builder => builder
     .AllowAnyOrigin()
