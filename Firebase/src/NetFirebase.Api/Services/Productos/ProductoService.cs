@@ -56,12 +56,21 @@ public class ProductoService : IProductoService
 
     public async Task<PagedResults<ProductoVm>> GetPagination(PaginationParams request)
     {
-        var query = _context.Database.SqlQuery<ProductoVm>(@$"
-            SELECT * FROM ""Productos""
-            
-        ");
+        /* var query = _context.Database.SqlQuery<ProductoVm>(@$"
+             SELECT * FROM ""Productos""
 
-        return await _paginacion.CreatePagedGenericResults(
+         ");*/
+
+        IQueryable<Producto> query = _context.Productos;
+
+        if(!string.IsNullOrEmpty(request.Search))
+        {
+            query = _context.Productos.Where(x => 
+                x.Nombre!.Contains(request.Search!) || 
+                x.Descripcion!.Contains(request.Search));
+        }
+
+        return await _paginacion.CreatePagedEntryAndGenericResults<Producto, ProductoVm>(
             query,
             request.PageNumber,
             request.PageSize,

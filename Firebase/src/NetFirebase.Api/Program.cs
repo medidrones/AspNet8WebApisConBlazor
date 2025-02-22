@@ -1,3 +1,4 @@
+using AutoMapper;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -7,6 +8,7 @@ using NetFirebase.Api;
 using NetFirebase.Api.Authentication;
 using NetFirebase.Api.Data;
 using NetFirebase.Api.Extensions;
+using NetFirebase.Api.Mappings;
 using NetFirebase.Api.Pagination;
 using NetFirebase.Api.Services.Authentication;
 using NetFirebase.Api.Services.Permisos;
@@ -64,6 +66,14 @@ builder.Services.AddScoped<IPermisoService, PermisoService>();
 
     opt.UseSqlite(builder.Configuration.GetConnectionString("SqliteDatabase"));
 });*/
+
+var mapperConfig = new MapperConfiguration(cfg =>
+{
+    cfg.AddProfile(new MappingProfile());
+});
+
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
 
 builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<IPagedList, PagedList>();

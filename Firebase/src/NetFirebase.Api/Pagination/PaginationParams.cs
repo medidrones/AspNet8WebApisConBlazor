@@ -14,4 +14,5 @@ public class PaginationParams
 
     public string? OrderBy { get; set; }
     public bool OrderAsc { get; set; } = true;
+    public string? Search { get; set; }
 }
