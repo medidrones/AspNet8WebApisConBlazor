@@ -2,6 +2,7 @@ using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using NetFirebase.Api;
 using NetFirebase.Api.Data;
 using NetFirebase.Api.Extensions;
 using NetFirebase.Api.Services.Authentication;
@@ -20,6 +21,9 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 {
     options.UseNpgsql(connectionString);
 });
+
+builder.Services.AddSignalR();
+builder.Services.AddHostedService<ServerNotifier>();
 
 FirebaseApp.Create(new AppOptions 
 { 
@@ -75,5 +79,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.AddDataPrueba();
+
+app.MapHub<NotificationHub>("notifications");
 
 app.Run();
