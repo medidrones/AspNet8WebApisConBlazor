@@ -1,11 +1,14 @@
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using NetFirebase.Api;
+using NetFirebase.Api.Authentication;
 using NetFirebase.Api.Data;
 using NetFirebase.Api.Extensions;
 using NetFirebase.Api.Services.Authentication;
+using NetFirebase.Api.Services.Permisos;
 using NetFirebase.Api.Services.Productos;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,6 +47,11 @@ builder.Services
         jwtOptions.Audience = builder.Configuration["Authentication:Audience"];
         jwtOptions.TokenValidationParameters.ValidIssuer = builder.Configuration["Authentication:ValidIssuer"];
     });
+
+builder.Services.AddAuthorization();
+builder.Services.AddSingleton<IAuthorizationHandler, PermisoAuthorizationHandler>();
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermisoAuthorizationPolicyProvider>();
+builder.Services.AddScoped<IPermisoService, PermisoService>();
 
 /*builder.Services.AddDbContext<DatabaseContext>(opt =>
 {

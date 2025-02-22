@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 
 namespace NetFirebase.Api;
 
+[Authorize]
 public class NotificationHub : Hub<INotificationClient>
 {
     public override Task OnConnectedAsync()

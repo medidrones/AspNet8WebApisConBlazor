@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using Microsoft.AspNetCore.SignalR.Client
 @implements IAsyncDisposable
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <PageTitle>Index</PageTitle>
 
@@ -23,8 +24,10 @@ Mensajes que viene del servidor api por SignalR:
 
     protected override async Task OnInitializedAsync()
     {
+        var token = await localStorage.GetItemAsync<string>("authToken");
+
         _hubConnection = new HubConnectionBuilder()
-            .WithUrl("http://localhost:5000/notifications")
+            .WithUrl("http://localhost:5000/notifications", x => x.AccessTokenProvider = () => Task.FromResult<string?>(token))
             .Build();
 
         _hubConnection.On<string>("RecibeNotification", message =>
